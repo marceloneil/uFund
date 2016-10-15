@@ -1,0 +1,12 @@
+{
+  "name": "uFund",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "solc": "^0.4.2",
+    "web3": "^0.17.0-beta"
+  }
+}

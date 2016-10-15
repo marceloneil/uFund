@@ -1,56 +1,54 @@
-pragma solidity >= 0.3 .0;
-
-contract token {
-    function transfer(address reciever, uint amount) {}
-}
+pragma solidity ^0.4.2;
+contract token { function transfer(address receiver, uint amount){  } }
 
 contract Sale {
     address public beneficiary;
-    uint public fundingGoal;
-    uint public amountFunded;
-    uint public deadline;
-    uint public price;
-    token public share;
+    uint public fundingGoal; uint public amountRaised; uint public deadline; uint public price;
+    token public shareReward;
     mapping(address => uint256) public balanceOf;
     bool fundingGoalReached = false;
-    event GoalReached(address beneficiary, uint amountFunded);
+    event GoalReached(address beneficiary, uint amountRaised);
     event FundTransfer(address backer, uint amount, bool isContribution);
     bool saleClosed = false;
 
+    /* data structure to hold information about campaign contributors */
+
+    /*  at initialization, setup the owner */
     function Sale(
-        address successAddress,
-        uint goal,
-        uint duration,
-        uint cost,
-        token tokenAddress
+        address ifSuccessfulSendTo,
+        uint fundingGoalInEthers,
+        uint durationInMinutes,
+        uint etherCostOfEachToken,
+        token addressOfTokenUsedAsReward
     ) {
-        beneficiary = successAddress;
-        fundingGoal = goal * 1 ether;
-        deadline = now + duration * 1 minutes;
-        price = cost * 1 ether;
-        share = token(tokenAddress);
+        beneficiary = ifSuccessfulSendTo;
+        fundingGoal = fundingGoalInEthers * 1 ether;
+        deadline = now + durationInMinutes * 1 minutes;
+        price = etherCostOfEachToken * 1 ether;
+        shareReward = token(addressOfTokenUsedAsReward);
     }
 
-    function() {
+    /* The function without name is the default function that is called whenever anyone sends funds to a contract */
+    function () payable{
         if (saleClosed) throw;
         uint amount = msg.value;
         balanceOf[msg.sender] = amount;
-        amountFunded += amount;
-        share.transfer(msg.sender, amount / price);
+        amountRaised += amount;
+        shareReward.transfer(msg.sender, amount / price);
         FundTransfer(msg.sender, amount, true);
     }
 
-    modifier afterDeadline() {
-        if (now >= deadline) _;
-    }
+    modifier afterDeadline() { if (now >= deadline) _; }
 
+    /* checks if the goal or time limit has been reached and ends the campaign */
     function checkGoalReached() afterDeadline {
-        if (amountFunded >= fundingGoal) {
+        if (amountRaised >= fundingGoal){
             fundingGoalReached = true;
-            GoalReached(beneficiary, amountFunded);
+            GoalReached(beneficiary, amountRaised);
         }
         saleClosed = true;
     }
+
 
     function safeWithdrawal() afterDeadline {
         if (!fundingGoalReached) {
@@ -66,9 +64,10 @@ contract Sale {
         }
 
         if (fundingGoalReached && beneficiary == msg.sender) {
-            if (beneficiary.send(amountFunded)) {
-                FundTransfer(beneficiary, amountFunded, false);
+            if (beneficiary.send(amountRaised)) {
+                FundTransfer(beneficiary, amountRaised, false);
             } else {
+                //If we fail to send the funds to beneficiary, unlock funders balance
                 fundingGoalReached = false;
             }
         }
