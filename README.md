@@ -1,6 +1,10 @@
 # uFund
 
 ### Setup
+[Download Ethereum Wallet](https://ethereum.org)
+Run on testnet
+
+### Setup (Old)
 
 Download [geth](https://www.ethereum.org/cli#geth)
 
