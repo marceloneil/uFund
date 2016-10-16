@@ -30,16 +30,13 @@ var shareContract;
 var shareAddress;
 var shareholderAddress;
 var saleAddress;
-var tokenNumber = 100;
-var tokenSelling = 40;
+var tokenNumber = 10;
+var tokenSelling = 5;
 var tokenName = "Share";
-var fundingGoal = 40;
 var duration = 60;
 var cost = 1;
 
-
-
-web3.personal.unlockAccount(master, "testtesttest", 1000);
+web3.personal.unlockAccount(process.env.MASTER, process.env.MASTERPWD, 1000);
 
 share.new(tokenNumber, tokenName, 0, "µ", {
     data: shareBC,
@@ -62,7 +59,7 @@ share.new(tokenNumber, tokenName, 0, "µ", {
                 if (!err) {
                     if (contract.address) {
                         shareholderAddress = contract.address;
-                        sale.new(successAddress, fundingGoal, duration, cost, shareAddress, {
+                        sale.new(successAddress, tokenSelling, duration, cost, shareAddress, {
                             data: saleBC,
                             from: master,
                             gas: web3.eth.estimateGas({
@@ -75,6 +72,7 @@ share.new(tokenNumber, tokenName, 0, "µ", {
 
                                     console.log("Add " + shareAddress + " to Custom Tokens");
                                     console.log("Send money to " + saleAddress);
+                                    console.log("Voting can be done at " + shareholderAddress);
 
                                     shareContract.transfer(saleAddress, tokenSelling, {
                                         from: master
