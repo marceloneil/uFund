@@ -23,15 +23,21 @@ exports.compile = function() {
 
     return {
         sale: web3.eth.contract(saleABI),
+        saleBC: saleBC,
         share: web3.eth.contract(shareABI),
-        shareholder: web3.eth.contract(shareholderABI)
+        shareBC: shareBC,
+        shareholder: web3.eth.contract(shareholderABI),
+        shareholderBC: shareholderBC
     };
 };
 
 exports.createContract = function({
     sale,
     share,
-    shareholder
+    shareholder,
+    saleBC,
+    shareBC,
+    shareholderBC
 }, {
     name,
     address,
@@ -92,9 +98,9 @@ exports.createContract = function({
                                         });
 
                                         return {
-                                          shareAddress: shareAddress,
-                                          saleAddress: saleAddress,
-                                          shareholderAddress: shareholderAddress
+                                            shareAddress: shareAddress,
+                                            saleAddress: saleAddress,
+                                            shareholderAddress: shareholderAddress
                                         };
                                     }
                                 } else {
