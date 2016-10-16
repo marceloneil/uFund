@@ -31,26 +31,24 @@ exports.compile = function() {
     };
 };
 
-exports.createContract = function({
-    sale,
-    share,
-    shareholder,
-    saleBC,
-    shareBC,
-    shareholderBC
-}, {
-    name,
-    address,
-    numShares,
-    numSelling,
-    price,
-    duration
-}) {
+exports.createContract = function(compiled, info) {
     var master = process.env.MASTER;
     var shareContract;
     var shareAddress;
     var shareholderAddress;
     var saleAddress;
+    var sale = compiled.sale;
+    var share = compiled.share;
+    var shareholder = compiled.shareholder;
+    var saleBC = compiled.saleBC;
+    var shareBC = compiled.shareBC;
+    var shareholderBC = compiled.shareholderBC;
+    var name = compiled.name;
+    var address = compiled.address;
+    var numShares = compiled.numShares;
+    var numSelling = compiled.numSelling;
+    var price = compiled.price;
+    var duration = compiled.duration;
 
     web3.personal.unlockAccount(master, process.env.MASTERPWD, 1000);
 
