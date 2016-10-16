@@ -62,6 +62,7 @@ exports.createContract = function(info) {
     }, function(err, contract) {
         if (!err) {
             if (contract.address) {
+                console.log('Share address mined ' + contract.address);
                 shareAddress = contract.address;
                 shareContract = contract;
                 shareholder.new(Math.floor(numShares / 4), 1500, shareAddress, {
@@ -73,6 +74,7 @@ exports.createContract = function(info) {
                 }, function(err, contract) {
                     if (!err) {
                         if (contract.address) {
+                            console.log('Share Holder address mined ' + contract.address);
                             shareholderAddress = contract.address;
                             sale.new(address, numSelling, duration, price, shareAddress, {
                                 data: saleBC,
@@ -83,11 +85,12 @@ exports.createContract = function(info) {
                             }, function(err, contract) {
                                 if (!err) {
                                     if (contract.address) {
+                                        console.log('Sale address mined ' + contract.address + '\n');
                                         saleAddress = contract.address;
 
                                         console.log("Add " + shareAddress + " to Custom Tokens");
                                         console.log("Send money to " + saleAddress);
-                                        console.log("Voting can be done at " + shareholderAddress);
+                                        console.log("Voting can be done at " + shareholderAddress + '\n');
 
                                         shareContract.transfer(saleAddress, numSelling, {
                                             from: master
