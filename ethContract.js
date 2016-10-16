@@ -2,6 +2,7 @@ var fs = require('fs');
 var solc = require('solc');
 var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var compiled = {};
 
 require.extensions['.sol'] = function(module, filename) {
     module.exports = fs.readFileSync(filename, 'utf8');
@@ -21,7 +22,7 @@ exports.compile = function() {
     var shareholderBC = shareholderComp.contracts.Association.bytecode;
     var shareholderABI = JSON.parse(shareholderComp.contracts.Association.interface);
 
-    return {
+    compiled = {
         sale: web3.eth.contract(saleABI),
         saleBC: saleBC,
         share: web3.eth.contract(shareABI),
@@ -31,7 +32,7 @@ exports.compile = function() {
     };
 };
 
-exports.createContract = function(compiled, info) {
+exports.createContract = function(info) {
     var master = process.env.MASTER;
     var shareContract;
     var shareAddress;
