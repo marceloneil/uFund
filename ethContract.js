@@ -32,7 +32,7 @@ exports.compile = function() {
     };
 };
 
-exports.createContract = function(info) {
+exports.createContract = function(info, callback) {
     var master = process.env.MASTER;
     var shareContract;
     var shareAddress;
@@ -50,6 +50,7 @@ exports.createContract = function(info) {
     var numSelling = info.numSelling;
     var price = info.price;
     var duration = info.duration;
+    var error = '';
 
     web3.personal.unlockAccount(master, process.env.MASTERPWD, 1000);
 
@@ -99,24 +100,28 @@ exports.createContract = function(info) {
                                             from: master
                                         });
 
-                                        return {
+                                        callback(error, {
                                             shareAddress: shareAddress,
                                             saleAddress: saleAddress,
                                             shareholderAddress: shareholderAddress
-                                        };
+                                        });
                                     }
                                 } else {
+                                  error = err;
                                     console.log(err);
                                 }
                             });
                         }
                     } else {
+                        error = err;
                         console.log(err);
                     }
                 });
             }
         } else {
+            error = err;
             console.log(err);
         }
+        callback(error, {});
     });
 };
