@@ -43,12 +43,12 @@ exports.createContract = function(compiled, info) {
     var saleBC = compiled.saleBC;
     var shareBC = compiled.shareBC;
     var shareholderBC = compiled.shareholderBC;
-    var name = compiled.name;
-    var address = compiled.address;
-    var numShares = compiled.numShares;
-    var numSelling = compiled.numSelling;
-    var price = compiled.price;
-    var duration = compiled.duration;
+    var name = info.name;
+    var address = info.address;
+    var numShares = info.numShares;
+    var numSelling = info.numSelling;
+    var price = info.price;
+    var duration = info.duration;
 
     web3.personal.unlockAccount(master, process.env.MASTERPWD, 1000);
 
